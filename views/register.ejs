@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+</head>
+<body>
+    <form action="/register" method="POST" name="register_form" id="register_form">
+        <h1>Register</h1>
+        <div>
+            <div>
+                <label for="username">Username: </label>
+                <input type="text" name="username" id="username" required/>
+            </div>
+            <div>
+                <label for="email">Email: </label>
+                <input type="email" name="email" id="email"/>
+            </div>
+        </div>
+        <div>
+            <div>
+                <label for="fname">First Name: </label>
+                <input type="text" name="fname" id="fname" required/>
+            </div> 
+            <div>
+                <label for="lname">Last Name: </label>
+                <input type="text" name="lname" id="lname" required/>
+            </div>
+        </div>
+        <div>
+            <div>
+                <label for="password">Password: </label>
+                <input type="text" name="password" id="password" pattern=".{8,}" required/>
+            </div>
+            <div>
+                <label for="cpassword">Confirm Password: </label>
+                <input type="text" name="cpassword" id="cpassword" required/>
+            </div>
+        </div>
+        <div>
+            <div>
+                <label for="balance">Balance: </label>
+                <input type="number" name="balance" id="balance" min="0">
+            </div>
+            <div>
+                <input type="radio" name="position" id="admin" value="Admin">
+                <label for="admin">Admin</label>
+                <input type="radio" name="position" id="manager" value="Manager">
+                <label for="manager">Manager</label>
+                <input type="radio" name="position" id="staff" value="Staff">
+                <label for="staff">Staff</label>
+            </div>
+        </div>
+        <button type="button" onclick="checkpassword()">Register</button>
+    </form>
+    <form action="/backtoindex" method="POST">
+        <button type="submit">Back</button>
+    </form>
+    <script>
+        function checkpassword() {
+            var p = register_form.password.value;
+            var cp = register_form.cpassword.value;
+            var email = register_form.email.value;
+            if (p != cp) {
+                alert("Passwords don't match!");
+            } else if (p.toString().length < 8) {
+                alert("Password is too short");
+            } else if (email.length != 0 && register_form.position.value.length == 0) {
+                alert("Choose a position or empty email");
+            } else {  
+                document.getElementById("register_form").submit();
+            }
+        }
+    </script>
+</body>
+</html>

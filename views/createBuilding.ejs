@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Building</title>
+</head>
+<body>
+    <form action="/createB" method="POST">
+        <h1>Create Building</h1>
+        <div>
+            <label for="bname">Name: </label>
+            <input type="text" name="bname" id="bname" required>
+        </div>
+        <div>
+            <label for="description">Description: </label>
+            <textarea name="description" id="description" cols="30" rows="10" required></textarea>
+        </div>
+        <div>
+            <div id="newElementID">
+                <div id ="0">
+                    <label for="btag">Tags</label>
+                    <input type="text" name="btag" id="btag0">        
+                    <button type="button" onclick="addtag()" id="add0" value="0">Add</button>
+                    <button type="button" onclick="deletetag(this)" id="delete0" value="0">Delete</button>
+                </div>
+            </div>
+        </div>
+        <script>
+            var tags = [];
+            var counter = 0;
+            function addtag() {
+                tags.push(document.getElementById(`btag${counter}`).value);
+                counter++;
+                var newtextbox = document.createElement('div');
+                newtextbox.setAttribute("id", `${counter}`);
+                newtextbox.innerHTML = `<input type='text' id='btag${counter}'> <button type="button" onclick="addtag()" id="add${counter}" value=${counter}>Add</button> <button type="button" onclick="deletetag(this)" id="delete${counter}" value=${counter}>Delete</button>`;
+                document.getElementById("newElementID").appendChild(newtextbox);
+                document.getElementById("tags").value = JSON.stringify(tags);
+            }
+            function deletetag(index) {
+                tags.splice(index.value, 1);
+                var elem = document.getElementById(`${index.value}`);
+                elem.parentNode.removeChild(elem);
+                counter--;
+                document.getElementById("tags").value = JSON.stringify(tags);
+            }
+        </script>
+        <input type="hidden" id="tags" name="tags" value="">
+        <button type="submit">Create</button>
+    </form>
+    <form action="/backtomanageBS" method="POST">
+        <button type="submit">Back</button>
+    </form>
+</body>
+</html>

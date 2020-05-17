@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    table#t01 tr:nth-child(even) {
+        background-color: #eee;
+    }
+    table#t01 tr:nth-child(odd) {
+        background-color: #fff;
+    }
+    table#t01 th {
+        color: white;
+        background-color: black;
+    }
+</style>
+<script
+  src="https://code.jquery.com/jquery-3.5.0.min.js"
+  integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ="
+  crossorigin="anonymous">
+</script>
+<body>
+    <form action="/filterFood" method="POST">
+        <h1>Manage Food</h1>
+        <div>
+            <label for="foodName">Name: </label>
+            <select name="foodName" id="foodName">
+                <%  var foodName = JSON.parse(foodName);
+                    for (let i = 0; i < foodName.length; i++) { %>
+                    <option value="<%= foodName[i] %>"><%= foodName[i] %></option> 
+                <% } %>
+            </select>
+        </div>
+        <div>
+            <label for="info">Sort by type:</label>
+            <input type="radio" name="sortedby" id="Name" value="Name" />
+            <label for="Name">Name</label>
+            <input type="radio" name="sortedby" id="menuCount" value="menuCount" />
+            <label for="menuCount">menuCount</label>
+            <input type="radio" name="sortedby" id="purchaseCount" value="purchaseCount" />
+            <label for="purchaseCount">purchaseCount</label>
+        </div>
+        <div>
+            <label for="info">Ascending or Descending:</label>
+            <input type="radio" name="direction" id="ASC" value="ASC" />
+            <label for="ASC">ASC</label>
+            <input type="radio" name="direction" id="DESC" value="DESC" /> 
+            <label for="DESC">DESC</label>
+        </div>
+        <button type="submit">Filter</button>
+    </form>
+    <table id='t01'>
+        <tr>
+            <th>Name</th>
+            <th>menuCount</th>
+            <th>purchaseCount</th>
+        </tr>
+        <tbody id="myTable">
+        </tbody>
+    </table>
+    <script>
+        var myTable = <%- table %>;
+        buildTable(myTable);
+        function buildTable(data) { 
+            var table = document.getElementById('myTable');
+            for (let i = 0; i < data.length; i++) {
+                var row = 
+                    `<tr>
+                        <td><label><input type="radio" name="selected_name" id="selected_name" value="${data[i].foodName}">${data[i].foodName}</label></td>
+                        <td>${data[i].menuCount}</td>
+                        <td>${data[i].purchaseCount}</td>
+                    <tr>`   
+                table.innerHTML += row;
+            }
+        }
+    </script>
+    <form action="/backtohome" method="POST">
+        <button type="submit">Back</button>
+    </form>
+
+    <form action="/deleteFood" method="POST" id="newform">
+        <input type="hidden" name="selected" id="selected" value="">
+        <script>
+            function clicked() {
+                var ele = document.getElementsByName("selected_name");
+                for (let i = 0; i < ele.length; i++) {
+                    if (ele[i].checked) {
+                        document.getElementById('selected').value = ele[i].value;
+                    }
+                }
+                document.getElementById("newform").submit();
+            }
+        </script>
+        <button type="button" onclick="clicked()">Delete</button> 
+    </form>
+
+    <form action="/toCreateFood" method="POST">
+        <button type="submit">Create</button> 
+    </form>
+
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Order History</title>
+</head>
+<style>
+    table#t01 tr:nth-child(even) {
+        background-color: #eee;
+    }
+    table#t01 tr:nth-child(odd) {
+        background-color: #fff;
+    }
+    table#t01 th {
+        color: white;
+        background-color: black;
+    }
+</style>
+<body>
+    <h1>Order History</h1>
+    <table id='t01'>
+        <tr>
+            <th>Date</th>
+            <th>OrderID</th>
+            <th>Order Total</th>
+            <th>Food(s)</th>
+            <th>Food Quantity</th>
+        </tr>
+        <tbody id="myTable">
+
+        </tbody>
+    </table>
+    <script>
+        var arr = <%- array %>;
+        buildTable(arr);
+        function buildTable(data) { 
+            var table = document.getElementById('myTable');
+            for (let i = 0; i < data.length; i++) {
+                var row = 
+                    `<tr>
+                        <td>${data[i].date}</td>
+                        <td>${data[i].orderID}</td>
+                        <td>${data[i].orderTotal}</td>
+                        <td>${data[i].orderFood}</td>
+                        <td>${data[i].orderQuantity}</td>
+                    <tr>`   
+                table.innerHTML += row;
+            }
+        }
+    </script>
+    <form action="/backtohome" method="POST">
+        <button type="submit">Back</button>
+    </form>
+</body>
+</html>

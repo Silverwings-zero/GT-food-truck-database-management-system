@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    table#t01 tr:nth-child(even) {
+        background-color: #eee;
+    }
+    table#t01 tr:nth-child(odd) {
+        background-color: #fff;
+    }
+    table#t01 th {
+        color: white;
+        background-color: black;
+    }
+</style>
+<script
+  src="https://code.jquery.com/jquery-3.5.0.min.js"
+  integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ="
+  crossorigin="anonymous">
+</script>
+<body>
+    <form action="/viewFoodTruckSummaryFilter" method="POST">
+        <h1>Food Truck Summary</h1>
+
+        <div>
+            <label for="food_truck_name">Food Truck Name (contain): </label>
+            <input type="text" name="food_truck_name" id="food_truck_name">
+        </div>
+        
+        <div>
+            <label for="station_name">Station Name: </label>
+            <select name="station_name" id="station_name">
+                <%  var station_list = JSON.parse(station_list);
+                    for (let i = 0; i < station_list.length; i++) { %>
+                    <option value="<%= station_list[i] %>"><%= station_list[i] %></option> 
+                <% } %>    
+            </select>
+        </div>
+
+        <div>
+            <label for="date">Date: </label>
+            <input type="date" name="start_date" id="date">
+            -
+            <input type="date" name="end_date" id="date">
+        </div>
+
+        <div>
+            <label for="info">Sorted By:</label>
+            <input type="radio" name="sortedby" id="foodTruckName" value="foodTruckName">
+            <label for="foodTruckName">Food Truck Name</label>
+            <input type="radio" name="sortedby" id="totalOrder" value="totalOrder">
+            <label for="totalOrder"># Total Order</label>
+            <input type="radio" name="sortedby" id="totalRevenue" value="totalRevenue">
+            <label for="totalRevenue">Total Revenue</label>
+            <input type="radio" name="sortedby" id="totalCustomer" value="totalCustomer">
+            <label for="totalCustomer"># Customer</label>
+        </div>
+        <div>
+            <label for="info">Sorted Direction:</label>
+            <input type="radio" name="direction" id="asc" value="ASC">
+            <label for="asc">ASC</label>
+            <input type="radio" name="direction" id="desc" value="DESC">
+            <label for="desc">DESC</label>
+        </div>
+
+        <button type="submit">Filter</button>
+    </form>
+
+    <table id='t01'>
+        <tr>
+            <th>Food Truck Name</th>
+            <th># Total Order</th>
+            <th>Total Revenue</th>
+            <th># Customer</th>
+        </tr>
+        <tbody id="myTable">
+
+        </tbody>
+    </table>
+    <script>
+        var myTable = <%- table %>;
+        buildTable(myTable);
+        function buildTable(data) { 
+            var table = document.getElementById('myTable');
+            for (let i = 0; i < data.length; i++) {
+                var row = 
+                    `<tr>
+                        <td><label><input type="radio" name="selected_name" id="selected_name" value="${data[i].foodTruckName}">${data[i].foodTruckName}</label></td>
+                        <td>${data[i].totalOrder}</td>
+                        <td>${data[i].totalRevenue}</td>
+                        <td>${data[i].totalCustomer}</td>
+                    <tr>`   
+                table.innerHTML += row;
+            }
+        }
+    </script>
+
+    <form action="/backtohome" method="POST">
+        <button type="submit">Back</button>
+    </form>
+
+    <form action="/viewSummaryDetail" method="POST" id="detailForm">
+        <input type="hidden" name="selected" id="selected" value="">
+        <script>
+            function clicked() {
+                var ele = document.getElementsByName("selected_name");
+                for (let i = 0; i < ele.length; i++) {
+                    if (ele[i].checked) {
+                        document.getElementById('selected').value = ele[i].value;
+                    }
+                }
+                document.getElementById("detailForm").submit();
+            }
+        </script>
+        <button type="button" onclick="clicked()">View Detail</button> 
+    </form>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    table#t01 tr:nth-child(even) {
+        background-color: #eee;
+    }
+    table#t01 tr:nth-child(odd) {
+        background-color: #fff;
+    }
+    table#t01 th {
+        color: white;
+        background-color: black;
+    }
+</style>
+<script
+  src="https://code.jquery.com/jquery-3.5.0.min.js"
+  integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ="
+  crossorigin="anonymous">
+</script>
+<body>
+    <form action="/manageBS" method="POST">
+        <h1>Manage Building & Station</h1>
+        <div>
+            <label for="bname">Building Name: </label>
+            <select name="bname" id="bname">
+                <%  var buildingName = JSON.parse(buildingName);
+                    for (let i = 0; i < buildingName.length; i++) { %>
+                    <option value="<%= buildingName[i] %>"><%= buildingName[i] %></option> 
+                <% } %>
+            </select>
+        </div>
+        <div>
+            <label for="sname">Station Name: </label>
+            <select name="sname" id="sname">
+                <%  var stationName = JSON.parse(stationName);
+                    for (let i = 0; i < stationName.length; i++) { %>
+                    <option value="<%= stationName[i] %>"><%= stationName[i] %></option> 
+                <% } %>    
+            </select>
+        </div>
+        <div>
+            <label for="btag">Building Tag (contain): </label>
+            <input type="text" name="btag" id="btag">
+        </div>
+        <div>
+            <label for="capacity">Capacity: </label>
+            <input type="number" name="capacity_low" id="capacity">
+            -
+            <input type="number" name="capacity_high" id="capacity">
+        </div>
+        <button type="submit">Filter</button>
+    </form>
+    <table id='t01'>
+        <tr>
+            <th>Building</th>
+            <th>Tag(s)</th>
+            <th>Station</th>
+            <th>Capacity</th>
+            <th>Food Truck(s)</th>
+        </tr>
+        <tbody id="myTable">
+
+        </tbody>
+    </table>
+    <script>
+        var arr = <%- array %>;
+        buildTable(arr);
+        function buildTable(data) { 
+            var table = document.getElementById('myTable');
+            for (let i = 0; i < data.length; i++) {
+                var row = 
+                    `<tr>
+                        <td><label><input type="radio" name="selectedBuilding" id="selectedBuilding" value="${data[i].bname}">${data[i].bname}</label></td>
+                        <td>${data[i].tags}</td>
+                        <td>${data[i].sname}</td>
+                        <td>${data[i].cap}</td>
+                        <td>${data[i].tnames}</td>
+                    <tr>`   
+                table.innerHTML += row;
+            }
+        }
+    </script>
+    <form action="/backtohome" method="POST">
+        <button type="submit">Back</button>
+    </form>
+    <form action="/createBuilding" method="POST">
+        <button type="submit">Create Building</button> 
+    </form>
+
+    <form action="/toUpDateBuilding" method="POST" id="newform">
+        <input type="hidden" name="selected" id="selected" value="">
+        <script>
+            function clicked() {
+                var ele = document.getElementsByName("selectedBuilding");
+                for (let i = 0; i < ele.length; i++) {
+                    if (ele[i].checked) {
+                        document.getElementById('selected').value = ele[i].value;
+                    }
+                }
+                document.getElementById("newform").submit();
+            }
+        </script>
+        <button type="button" onclick="clicked()">Update Building</button> 
+    </form>
+
+    <form action="/toCreateStation" method="POST">
+        <button type="submit">Create Station</button>
+    </form>
+
+    <form action="/deleteBuilding" method="POST" id="form2">
+        <input type="hidden" name="selectedbd" id="selectedbd" value="">
+        <script>
+            function clicked2() {
+                var ele = document.getElementsByName("selectedBuilding");
+                for (let i = 0; i < ele.length; i++) {
+                    if (ele[i].checked) {
+                        document.getElementById('selectedbd').value = ele[i].value;
+                    }
+                }
+                document.getElementById("form2").submit();
+            }
+        </script>
+        <button type="button" onclick="clicked2()">Delete Building</button> 
+    </form>
+
+    <form action="/toCreateStation" method="POST">
+        <button type="submit">Create Station</button>
+    </form>
+    
+    <form action="/toUpDateStation" method="POST" id="form1">
+        <input type="hidden" name="selectedStation" id="selectedStation" value="">
+        <script>
+            function clicked1() {
+                var ele = document.getElementsByName("selectedBuilding");
+                for (let i = 0; i < ele.length; i++) {
+                    if (ele[i].checked) {
+                        document.getElementById('selectedStation').value = ele[i].value;
+                    }
+                }
+                document.getElementById("form1").submit();
+            }
+        </script>
+        <button type="button" onclick="clicked1()">Update Station</button> 
+    </form>
+
+    <form action="/deleteStation" method="POST" id="form3">
+        <input type="hidden" name="sel_bname" id="sel_bname" value="">
+        <script>
+            function clicked3() {
+                var ele = document.getElementsByName("selectedBuilding");
+                for (let i = 0; i < ele.length; i++) {
+                    if (ele[i].checked) {
+                        document.getElementById('sel_bname').value = ele[i].value;
+                    }
+                }
+                document.getElementById("form3").submit();
+            }
+        </script>
+        <button type="button" onclick="clicked3()">Delete Station</button> 
+    </form>
+</body>
+</html>

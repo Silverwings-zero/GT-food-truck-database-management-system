@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    table#t01 tr:nth-child(even) {
+        background-color: #eee;
+    }
+    table#t01 tr:nth-child(odd) {
+        background-color: #fff;
+    }
+    table#t01 th {
+        color: white;
+        background-color: black;
+    }
+</style>
+<script
+  src="https://code.jquery.com/jquery-3.5.0.min.js"
+  integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ="
+  crossorigin="anonymous">
+</script>
+<body>
+    
+    <form action="/customerOrder" method="POST">
+        <h1>Order</h1>
+        <div>
+            <label for="label" id="label">Food Truck:</label> 
+            <label for="food_truck_name" id="food_truck_name"><%= ft_name %></label>
+        </div>
+
+        <table id='t01'>
+            <tr>
+                <th>Food</th>
+                <th>Price</th>
+                <th>Purchase Quantity</th>
+            </tr>
+            <tbody id="myTable">
+            </tbody>
+        </table>
+        <div>
+            <label for="label" id="label">Date:</label> 
+            <input type="date" name="date" id="date">
+        </div>
+        <script>
+            var myTable = <%- table %>;
+            buildTable(myTable);
+            function buildTable(data) { 
+                var table = document.getElementById('myTable');
+                for (let i = 0; i < data.length; i++) {
+                    var row = 
+                        `<tr>
+                            <td><label><input type="checkbox" name="food" id="food" value="${data[i].foodName}">${data[i].foodName}</label></td>
+                            <td>${data[i].price}</td>
+                            <td><label><input type="text" name="purchaseQuantity" id="purchaseQuantity" value=""></label></td>
+                        <tr>`
+                    table.innerHTML += row;
+                }
+            }
+
+        </script>
+        <input type="hidden" name="foodtruck_name" value="<%- ft_name%>">
+        <button type="submit">Submit</button>
+    </form>
+
+    <form action="/viewCurrentInformation" method="POST">
+        <button type="submit">Back</button>
+    </form>
+</body>
+</html>

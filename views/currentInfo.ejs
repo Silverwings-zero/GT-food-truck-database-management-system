@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    table#t01 tr:nth-child(even) {
+        background-color: #eee;
+    }
+    table#t01 tr:nth-child(odd) {
+        background-color: #fff;
+    }
+    table#t01 th {
+        color: white;
+        background-color: black;
+    }
+</style>
+<script
+  src="https://code.jquery.com/jquery-3.5.0.min.js"
+  integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ="
+  crossorigin="anonymous">
+</script>
+<body>
+    <form action="/viewFoodTruckSummaryFilter" method="POST">
+        <h1>Current Information</h1>
+
+        <div>
+            <label for="label" id="label">Station: </label>
+            <label for="s_name" id="s_name"><%= s_name %></label>
+        </div>
+
+        <div>
+            <label for="label" id="label">Building:</label> 
+            <label for="b_name" id="b_name"><%= b_name %></label>
+        </div>
+
+        <div>
+            <label for="label" id="label">Building Tags:</label> 
+            <label for="tags" id="tags"><%= tags %></label>
+        </div>
+
+        <div>
+            <label for="label" id="label">Building Description:</label> 
+            <label for="des" id="des"><%= des %></label>
+        </div>
+
+        <div>
+            <label for="label" id="label">Balance:</label> 
+            <label for="balance" id="balance"><%= balance %></label>
+        </div>
+
+    </form>
+    <table id='t01'>
+        <tr>
+            <th>Food Truck</th>
+            <th>Manager</th>
+            <th>Food(s)</th>
+        </tr>
+        <tbody id="myTable">
+
+        </tbody>
+    </table>
+    <script>
+        var myTable = <%- table %>;
+        buildTable(myTable);
+        function buildTable(data) { 
+            var table = document.getElementById('myTable');
+            for (let i = 0; i < data.length; i++) {
+                var row = 
+                    `<tr>
+                        <td><label><input type="radio" name="selected_name" id="selected_name" value="${data[i].foodTruckName}">${data[i].foodTruckName}</label></td>
+                        <td>${data[i].managerName}</td>
+                        <td>${data[i].foodNames}</td>
+                    <tr>`   
+                table.innerHTML += row;
+            }
+        }
+    </script>
+
+    <form action="/backtohome" method="POST">
+        <button type="submit">Back</button>
+    </form>
+
+    <form action="/toCustomerOrder" method="POST" id="newform">
+        <input type="hidden" name="selected" id="selected" value="">
+        <script>
+            function clicked() {
+                var ele = document.getElementsByName("selected_name");
+                for (let i = 0; i < ele.length; i++) {
+                    if (ele[i].checked) {
+                        document.getElementById('selected').value = ele[i].value;
+                    }
+                }
+                document.getElementById("newform").submit();
+            }
+        </script>
+        <button type="button" onclick="clicked()">Order</button> 
+    </form>
+</body>
+</html>

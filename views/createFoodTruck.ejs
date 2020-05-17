@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Food Truck</title>
+</head>
+<body>
+    <form action="/createFoodTruck" method="POST">
+        <h1>Create Food Truck</h1>
+        <div>
+            <label for="fname">Name: </label>
+            <input type="text" name="fname" id="fname" required>
+        </div>
+        <div>
+            <label for="station">Station: </label>
+            <select name="station" id="station" required>
+                <%  var stations = JSON.parse(stations);
+                    for (let i = 0; i < stations.length; i++) { %>
+                    <option value="<%= stations[i] %>"><%= stations[i] %></option> 
+                <% } %>
+            </select>
+        </div>
+        <div>
+            <label for="assignStaff">Assign Staff: (use control-click or command-click to choose multiple options)</label>
+            <select name="assignStaff" id="assignStaff" multiple required>
+                <%  var staffs = JSON.parse(staffs);
+                    for (let i = 0; i < staffs.length; i++) { %>
+                    <option value="<%= staffs[i] %>"><%= staffs[i] %></option> 
+                <% } %>      
+            </select>
+        </div>
+        <script>
+            var fooditems = [];
+            var foods = <%- foods %>
+            function addOptions(index) {
+                var keys = [];
+                for (let i = 0; i < fooditems.length; i++) {
+                    keys.push(fooditems[i].key);
+                }
+                var sel = document.getElementById(`food${index}`);
+                for (let i = 0; i < foods.length; i++) {
+                    if (!keys.includes(foods[i])) {
+                        var option = document.createElement('option');
+                        option.innerHTML = foods[i];
+                        option.value = foods[i];
+                        sel.appendChild(option);
+                    }
+                }
+            }
+        </script>
+        <div>
+            <div id="newElementID">
+                <div id ="0">
+                    <label>Menu Item: </label>
+                    <label for="food">Food</label>
+                    <select name="food" id="food0" required>
+                    </select>
+                    <script>
+                        var sel = document.getElementById(`food0`);
+                        for (let i = 0; i < foods.length; i++) {
+                            var option = document.createElement('option');
+                            option.innerHTML = foods[i];
+                            option.value = foods[i];
+                            sel.appendChild(option);
+                        }
+                    </script>
+                    <label for="price">Price</label>
+                    <input type="number" name="price" id="price0" step=".01" required>                 
+                    <button type="button" onclick="addFood()" id="add0" value="0">Add</button>
+                    <button type="button" onclick="deleteFood(this)" id="delete0" value="0">Delete</button>
+                </div>
+            </div>
+        </div>
+        <script>
+            var counter = 0;
+            function addFood() {
+                var opt = document.getElementById(`food${counter}`);
+                fooditems.push({
+                    key: opt.options[opt.selectedIndex].value,
+                    value: document.getElementById(`price${counter}`).value
+                });
+                counter++;
+                var newtextbox = document.createElement('div');
+                newtextbox.setAttribute("id", `${counter}`);
+                newtextbox.innerHTML = `<label for="food">Food</label>
+                <select name="food" id="food${counter}" required>
+                </select>
+                <label for="price">Price</label>
+                <input type="number" name="price" id="price${counter}" step=".01" required>
+                <button type="button" onclick="addFood()" id="add${counter}" value=${counter}>Add</button> 
+                <button type="button" onclick="deleteFood(this)" id="delete${counter}" value=${counter}>Delete</button>`;
+                document.getElementById("newElementID").appendChild(newtextbox);
+                document.getElementById("foodItems").value = JSON.stringify(fooditems);
+                addOptions(counter);
+            }
+            function deleteFood(index) {
+                fooditems.splice(index.value, 1);
+                var elem = document.getElementById(`${index.value}`);
+                elem.parentNode.removeChild(elem);
+                counter--;
+                document.getElementById("foodItems").value = JSON.stringify(fooditems);
+            }
+        </script>
+        <input type="hidden" id="foodItems" name="foodItems" value="">
+        <button type="submit">Create</button>
+    </form>
+    <form action="/manageFoodTruck" method="POST">
+        <button type="submit">Back</button>
+    </form>
+</body>
+</html>

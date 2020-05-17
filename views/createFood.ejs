@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    table#t01 tr:nth-child(even) {
+        background-color: #eee;
+    }
+    table#t01 tr:nth-child(odd) {
+        background-color: #fff;
+    }
+    table#t01 th {
+        color: white;
+        background-color: black;
+    }
+</style>
+<script
+  src="https://code.jquery.com/jquery-3.5.0.min.js"
+  integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ="
+  crossorigin="anonymous">
+</script>
+<body>
+    <h1>Create Food</h1>
+    <form action="/createFood" method="POST">
+        <div>
+            <label for="Name">Name: </label>
+            <input type="text" name="Name" id="Name">
+        </div>
+        <button type="submit">Create</button> 
+    </form>
+    
+    <form action="/backtomanagefood" method="POST">
+        <button type="submit">Back</button>
+    </form>
+
+    
+
+</body>
+</html>

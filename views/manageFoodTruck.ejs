@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    table#t01 tr:nth-child(even) {
+        background-color: #eee;
+    }
+    table#t01 tr:nth-child(odd) {
+        background-color: #fff;
+    }
+    table#t01 th {
+        color: white;
+        background-color: black;
+    }
+</style>
+<script
+  src="https://code.jquery.com/jquery-3.5.0.min.js"
+  integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ="
+  crossorigin="anonymous">
+</script>
+<body>
+    <form action="/manageFoodTruckFilter" method="POST">
+        <h1>Manage Food Truck</h1>
+
+        <div>
+            <label for="food_truck_name">Food Truck Name (contain): </label>
+            <input type="text" name="food_truck_name" id="food_truck_name">
+        </div>
+        
+        <div>
+            <label for="station_name">Station Name: </label>
+            <select name="station_name" id="station_name">
+                <%  var station_list = JSON.parse(station_list);
+                    for (let i = 0; i < station_list.length; i++) { %>
+                    <option value="<%= station_list[i] %>"><%= station_list[i] %></option> 
+                <% } %>    
+            </select>
+        </div>
+
+        <div>
+            <label for="staff_count">Staff Count: </label>
+            <input type="number" name="staff_low" id="staff_count">
+            -
+            <input type="number" name="staff_high" id="staff_count">
+        </div>
+
+        <div>
+            <input type="checkbox" name="has_remaining_cap" id="has_remaining_cap">
+            <label for="has_remaining_cap">Has Remaining Capacity </label>
+        </div>
+
+        <button type="submit">Filter</button>
+    </form>
+    <table id='t01'>
+        <tr>
+            <th>Food Truck Name</th>
+            <th>Station Name</th>
+            <th>Remaining Capacity</th>
+            <th>Staff</th>
+            <th># Menu Item</th>
+        </tr>
+        <tbody id="myTable">
+
+        </tbody>
+    </table>
+    <script>
+        var myTable = <%- table %>;
+        buildTable(myTable);
+        function buildTable(data) { 
+            var table = document.getElementById('myTable');
+            for (let i = 0; i < data.length; i++) {
+                var row = 
+                    `<tr>
+                        <td><label><input type="radio" name="selected_name" id="selected_name" value="${data[i].foodTruckName}">${data[i].foodTruckName}</label></td>
+                        <td>${data[i].stationName}</td>
+                        <td>${data[i].remainingCapacity}</td>
+                        <td>${data[i].staffCount}</td>
+                        <td>${data[i].menuItemCount}</td>
+                    <tr>`   
+                table.innerHTML += row;
+            }
+        }
+        // var victim_name = "input[name=victim_name]".val();
+    </script>
+
+    <form action="/backtohome" method="POST">
+        <button type="submit">Back</button>
+    </form>
+
+    <form action="/tocreateFoodTruck" method="POST">
+        <button type="submit">Create</button> 
+    </form>
+
+    <form action="/toupdateFoodTruck" method="POST" id="updateForm">
+        <input type="hidden" name="selected" id="selected" value="">
+        <script>
+            function clicked() {
+                var ele = document.getElementsByName("selected_name");
+                for (let i = 0; i < ele.length; i++) {
+                    if (ele[i].checked) {
+                        document.getElementById('selected').value = ele[i].value;
+                    }
+                }
+                document.getElementById("updateForm").submit();
+            }
+        </script>
+        <button type="button" onclick="clicked()">Update</button> 
+    </form>
+    <form action="/deleteFoodTruck" method="POST" id="deleteForm">
+        <input type="hidden" name="selected2" id="selected2" value="">
+        <script>
+            function clicked2() {
+                var ele = document.getElementsByName("selected_name");
+                for (let i = 0; i < ele.length; i++) {
+                    if (ele[i].checked) {
+                        document.getElementById('selected2').value = ele[i].value;
+                    }
+                }
+                document.getElementById("deleteForm").submit();
+            }
+        </script>
+        <button type="button" onclick="clicked2()">Delete</button> 
+    </form>
+</body>
+</html>
